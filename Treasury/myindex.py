@@ -27,13 +27,14 @@ app.layout = dbc.Container(children=[
 ], fluid=True,)
 
 
-@app.callback(Output('page-content', 'children'), [Input('url', 'pathname')])
-def render_page(pathname):
-    if pathname == '/' or pathname == '/dashboards':
+@app.callback(Output("page-content", "children"), [Input("url", "pathname")])
+def render_page_content(pathname):
+    if pathname == "/" or pathname == "/dashboards":
         return dashboards.layout
-    if pathname == 'extratos':
+
+    if pathname == "/extratos":
         return extratos.layout
 
 
 if __name__ == '__main__':
-    app.run_server(port=8051, debug=True)
+    app.run_server(debug=True)

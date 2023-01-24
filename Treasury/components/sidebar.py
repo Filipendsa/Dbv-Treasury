@@ -42,7 +42,7 @@ layout = dbc.Col([
                 dbc.Col([
                     dbc.Label('Descrição: '),
                     dbc.Input(
-                        placeholder="Ex: Campori, inscrição, brindes...", id="txt-receipt"),
+                        placeholder="Ex: Campori, inscrição, doações...", id="txt-receipt"),
                 ], width=6),
                 dbc.Col([
                     dbc.Label('Valor: '),
@@ -127,20 +127,20 @@ layout = dbc.Col([
                                 html.Legend("Adicionar Desbravador", style={
                                     'color': 'green'}),
                                 dbc.Input(
-                                    type="text", placeholder="Nome Desbravador...", id="input-add-patfinder", value=""),
+                                    type="text", placeholder="Nome Desbravador...", id="input-add-patfinder-receipt", value=""),
                                 html.Br(),
                                 dbc.Button(
-                                    "Adicionar", className="btn btn-success", id="add-category-patfinder", style={"margin-top": "20px"}),
+                                    "Adicionar", className="btn btn-success", id="add-category-patfinder-receipt", style={"margin-top": "20px"}),
                                 html.Br(),
                                 html.Div(
-                                    id="category-div-add-patfinder", style={}),
+                                    id="category-div-add-patfinder-receipt", style={}),
                             ], width=6),
 
                             dbc.Col([
                                 html.Legend("Excluir desbravadores", style={
                                     'color': 'red'}),
                                 dbc.Checklist(
-                                    id="checklist-selected-style-patfinder",
+                                    id="checklist-selected-style-patfinder-receipt",
                                     options=[],  # "label": i, "value": i} for i in cat_patfinder}
                                     value=[],
                                     label_checked_style={
@@ -149,12 +149,12 @@ layout = dbc.Col([
                                                          "borderColor": "#ea6258"},
                                 ),
                                 dbc.Button(
-                                    "Remover", color="warning", id="remove-patfinder", style={"margin-top": "20px"}),
+                                    "Remover", color="warning", id="remove-patfinder-receipt", style={"margin-top": "20px"}),
                             ], width=6)
                         ]),
                     ], title="Adicionar/Remover Desbravadores",
                     ),
-                ], flush=True, start_collapsed=True, id='accordion-receipt'),
+                ], flush=True, start_collapsed=True, id='accordion-patfinder-receipt'),
 
                 html.Div(id="id_teste_receipt", style={"padding-top": "20px"}),
 
@@ -182,18 +182,18 @@ layout = dbc.Col([
                 dbc.Col([
                     dbc.Label('Descrição: '),
                     dbc.Input(
-                        placeholder="Ex: Campori, inscrição, brindes...", id="txt-receipt"),
+                        placeholder="Ex: Campori, comida, brindes...", id="txt-expense"),
                 ], width=6),
                 dbc.Col([
                     dbc.Label('Valor: '),
                     dbc.Input(
-                        placeholder="Ex: R$100,00", id="value_receipt", value=""),
+                        placeholder="Ex: R$100,00", id="value_expense", value=""),
                 ], width=6),
             ]),
             dbc.Row([
                 dbc.Col([
                     dbc.Label("Data: "),
-                    dcc.DatePickerSingle(id='date-receipts',
+                    dcc.DatePickerSingle(id='date-expense',
                                          min_date_allowed=date(2020, 1, 1),
                                          max_date_allowed=date(2030, 12, 31),
                                          date=datetime.today(),
@@ -204,22 +204,22 @@ layout = dbc.Col([
                     dbc.Label("Extras"),
                     dbc.Checklist(
                         options=[{"label": "Foi recebida", "value": 1},
-                                 {"label": "Receita Recorrente", "value": 2}],
+                                 {"label": "Despesa Recorrente", "value": 2}],
                         value=[1],
-                        id="switches-input-receipt",
+                        id="switches-input-expense",
                         switch=True),
                 ], width=5),
             ], style={"margin-top": "25px"}),
             dbc.Row([
                     dbc.Col([
-                        html.Label("Categoria da receita"),
-                        # {"label": i, "value": i} for i in cat_receipt cat_receipt[0]
-                        dbc.Select(id="select_receipt", options=[], value=[])
+                        html.Label("Categoria da despesa"),
+                        # {"label": i, "value": i} for i in cat_expense cat_expense[0]
+                        dbc.Select(id="select_expense", options=[], value=[])
                     ], width=6),
                     dbc.Col([
                         html.Label("Desbravador"),
                         # {"label": i, "value": i} for i in cat_patfinder cat_patfinder[0]
-                        dbc.Select(id="select_patfinder",
+                        dbc.Select(id="select_patfinder-expense",
                                    options=[], value=[])
                     ], width=6)
                     ], style={"margin-top": "25px"}),
@@ -228,24 +228,24 @@ layout = dbc.Col([
                     dbc.AccordionItem(children=[
                         dbc.Row([
                             dbc.Col([
-                                html.Legend("Adicionar categoria", style={
+                                html.Legend("Adicionar Despesa", style={
                                     'color': 'green'}),
                                 dbc.Input(
-                                    type="text", placeholder="Nova categoria...", id="input-add-receipt", value=""),
+                                    type="text", placeholder="Nova categoria...", id="input-add-expense", value=""),
                                 html.Br(),
                                 dbc.Button(
-                                    "Adicionar", className="btn btn-success", id="add-category-receipt", style={"margin-top": "20px"}),
+                                    "Adicionar", className="btn btn-success", id="add-category-expense", style={"margin-top": "20px"}),
                                 html.Br(),
                                 html.Div(
-                                    id="category-div-add-receipt", style={}),
+                                    id="category-div-add-expense", style={}),
                             ], width=6),
 
                             dbc.Col([
                                 html.Legend("Excluir categorias", style={
                                     'color': 'red'}),
                                 dbc.Checklist(
-                                    id="checklist-selected-style-receipt",
-                                    options=[],  # "label": i, "value": i} for i in cat_receipt}
+                                    id="checklist-selected-style-expense",
+                                    options=[],  # "label": i, "value": i} for i in cat_expense}
                                     value=[],
                                     label_checked_style={
                                         "color": "red"},
@@ -253,11 +253,11 @@ layout = dbc.Col([
                                                          "borderColor": "#ea6258"},
                                 ),
                                 dbc.Button(
-                                    "Remover", color="warning", id="remove-category-receipt", style={"margin-top": "20px"}),
+                                    "Remover", color="warning", id="remove-category-expense", style={"margin-top": "20px"}),
                             ], width=6)
                         ]),
                     ], title="Adicionar/Remover Categorias",),
-                ], flush=True, start_collapsed=True, id='accordion-receipt'),
+                ], flush=True, start_collapsed=True, id='accordion-expense'),
             ], style={"margin-top": "25px"}),
             dbc.Row([
                 dbc.Accordion([
@@ -267,21 +267,21 @@ layout = dbc.Col([
                                 html.Legend("Adicionar Desbravador", style={
                                     'color': 'green'}),
                                 dbc.Input(
-                                    type="text", placeholder="Nome Desbravador...", id="input-add-patfinder", value=""),
+                                    type="text", placeholder="Nome Desbravador...", id="input-add-patfinder-expense", value=""),
                                 html.Br(),
                                 dbc.Button(
-                                    "Adicionar", className="btn btn-success", id="add-category-patfinder", style={"margin-top": "20px"}),
+                                    "Adicionar", className="btn btn-success", id="add-category-patfinder-expense", style={"margin-top": "20px"}),
                                 html.Br(),
                                 html.Div(
-                                    id="category-div-add-patfinder", style={}),
+                                    id="category-div-add-patfinder-expense", style={}),
                             ], width=6),
 
                             dbc.Col([
                                 html.Legend("Excluir desbravadores", style={
                                     'color': 'red'}),
                                 dbc.Checklist(
-                                    id="checklist-selected-style-patfinder",
-                                    options=[],  # "label": i, "value": i} for i in cat_patfinder}
+                                    id="checklist-selected-style-patfinder-expense",
+                                    options=[],  # "label": i, "value": i} for i in cat_patfinder_expense}
                                     value=[],
                                     label_checked_style={
                                         "color": "red"},
@@ -289,20 +289,20 @@ layout = dbc.Col([
                                                          "borderColor": "#ea6258"},
                                 ),
                                 dbc.Button(
-                                    "Remover", color="warning", id="remove-patfinder", style={"margin-top": "20px"}),
+                                    "Remover", color="warning", id="remove-patfinder-expense", style={"margin-top": "20px"}),
                             ], width=6)
                         ]),
                     ], title="Adicionar/Remover Desbravadores",
                     ),
-                ], flush=True, start_collapsed=True, id='accordion-receipt'),
+                ], flush=True, start_collapsed=True, id='accordion-patfinder-expense'),
 
-                html.Div(id="id_teste_receipt", style={"padding-top": "20px"}),
+                html.Div(id="id_teste_expense", style={"padding-top": "20px"}),
 
                 dbc.ModalFooter([
                     dbc.Button(
-                        "Adicionar Receita", id="save_receipt", color="success"),
+                        "Adicionar Receita", id="save_expense", color="success"),
                     dbc.Popover(dbc.PopoverBody(
-                        "Receita Salva"), target="save_receipt", placement="left", trigger="click"),
+                        "Receita Salva"), target="save_expense", placement="left", trigger="click"),
                 ])
             ], style={"margin-top": "25px"}),
         ])
