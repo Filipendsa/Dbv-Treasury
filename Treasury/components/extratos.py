@@ -15,7 +15,7 @@ from dash_bootstrap_templates import template_from_url, ThemeChangerAIO
 layout = dbc.Col([
     dbc.Row([
         html.Legend("Tabela de despesas"),
-        html.Div(id="tabela-despesas", className="dbc"),
+        html.Div(id="table-expense", className="dbc"),
     ]),
 
     dbc.Row([
@@ -27,7 +27,7 @@ layout = dbc.Col([
             dbc.Card(
                 dbc.CardBody([
                     html.H4("Despesas"),
-                    html.Legend("R$ -", id="valor_despesa_card",
+                    html.Legend("R$ -", id="value_expense_card",
                                 style={'font-size': '60px'}),
                     html.H6("Total de despesas"),
                 ], style={'text-align': 'center', 'padding-top': '30px'}))
@@ -40,8 +40,8 @@ layout = dbc.Col([
 
 
 @app.callback(
-    Output('tabela-despesas', 'children'),
-    Input('store-despesas', 'data')
+    Output('table-expense', 'children'),
+    Input('store-expense', 'data')
 )
 def imprimir_tabela(data):
     df = pd.DataFrame(data)
@@ -85,7 +85,7 @@ def imprimir_tabela(data):
 
 @app.callback(
     Output('bar-graph', 'figure'),
-    [Input('store-despesas', 'data'),
+    [Input('store-expense', 'data'),
      Input(ThemeChangerAIO.ids.radio("theme"), "value")]
 )
 def bar_chart(data, theme):
@@ -102,8 +102,8 @@ def bar_chart(data, theme):
 
 
 @app.callback(
-    Output('valor_despesa_card', 'children'),
-    Input('store-despesas', 'data')
+    Output('value_expense_card', 'children'),
+    Input('store-expense', 'data')
 )
 def display_desp(data):
     df = pd.DataFrame(data)
