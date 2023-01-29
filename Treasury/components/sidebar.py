@@ -1,15 +1,22 @@
+
 import os
 import dash
+import json
+import plotly.express as px
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
 from app import app
-
 from datetime import datetime, date
-import plotly.express as px
+
+import pdb
+from dash_bootstrap_templates import ThemeChangerAIO
+
+# ========= DataFrames ========= #
 import numpy as np
 import pandas as pd
+from globals import *
 
 
 # ========= Layout ========= #
@@ -18,7 +25,7 @@ layout = dbc.Col([
     html.P("By FilipeNdsa", className="text-info"),
     html.Hr(),
 
-    # ========= Perfil ========= #
+    # ========= profile ========= #
     dbc.Button(id='button_avatar',
                children=[html.Img(src='assets/img_hom.png', id='avatar_change', alt='Avatar', className='profile_avatar')
                          ], style={'background-color': 'transparent', 'border-color': 'transparent'}),
@@ -73,14 +80,13 @@ layout = dbc.Col([
             dbc.Row([
                     dbc.Col([
                         html.Label("Categoria da receita"),
-                        # {"label": i, "value": i} for i in cat_receipt cat_receipt[0]
-                        dbc.Select(id="select_receipt", options=[], value=[])
+                        dbc.Select(id="select_receipt", options=[
+                                   {"label": i, "value": i} for i in cat_receipt], value=cat_receipt[0])
                     ], width=6),
                     dbc.Col([
                         html.Label("Desbravador"),
-                        # {"label": i, "value": i} for i in cat_patfinder cat_patfinder[0]
-                        dbc.Select(id="select_patfinder",
-                                   options=[], value=[])
+                        dbc.Select(id="select_patfinder", options=[
+                                   {"label": i, "value": i} for i in dbv_patfinder], value=dbv_patfinder[0])
                     ], width=6)
                     ], style={"margin-top": "25px"}),
             dbc.Row([
@@ -105,7 +111,8 @@ layout = dbc.Col([
                                     'color': 'red'}),
                                 dbc.Checklist(
                                     id="checklist-selected-style-receipt",
-                                    options=[],  # "label": i, "value": i} for i in cat_receipt}
+                                    options=[{"label": i, "value": i}
+                                             for i in cat_receipt],
                                     value=[],
                                     label_checked_style={
                                         "color": "red"},
@@ -141,7 +148,8 @@ layout = dbc.Col([
                                     'color': 'red'}),
                                 dbc.Checklist(
                                     id="checklist-selected-style-patfinder-receipt",
-                                    options=[],  # "label": i, "value": i} for i in cat_patfinder}
+                                    options=[{"label": i, "value": i}
+                                             for i in dbv_patfinder],
                                     value=[],
                                     label_checked_style={
                                         "color": "red"},
@@ -213,14 +221,13 @@ layout = dbc.Col([
             dbc.Row([
                     dbc.Col([
                         html.Label("Categoria da despesa"),
-                        # {"label": i, "value": i} for i in cat_expense cat_expense[0]
-                        dbc.Select(id="select_expense", options=[], value=[])
+                        dbc.Select(id="select_expense", options=[
+                                   {"label": i, "value": i} for i in cat_expense], value=[cat_expense[0]])
                     ], width=6),
                     dbc.Col([
                         html.Label("Desbravador"),
-                        # {"label": i, "value": i} for i in cat_patfinder cat_patfinder[0]
-                        dbc.Select(id="select_patfinder-expense",
-                                   options=[], value=[])
+                        dbc.Select(id="select_patfinder_expense",
+                                   options=[{"label": i, "value": i} for i in dbv_patfinder], value=[dbv_patfinder[0]])
                     ], width=6)
                     ], style={"margin-top": "25px"}),
             dbc.Row([
@@ -245,7 +252,8 @@ layout = dbc.Col([
                                     'color': 'red'}),
                                 dbc.Checklist(
                                     id="checklist-selected-style-expense",
-                                    options=[],  # "label": i, "value": i} for i in cat_expense}
+                                    options=[{"label": i, "value": i}
+                                             for i in cat_expense],
                                     value=[],
                                     label_checked_style={
                                         "color": "red"},
@@ -281,7 +289,8 @@ layout = dbc.Col([
                                     'color': 'red'}),
                                 dbc.Checklist(
                                     id="checklist-selected-style-patfinder-expense",
-                                    options=[],  # "label": i, "value": i} for i in cat_patfinder_expense}
+                                    options=[{"label": i, "value": i}
+                                             for i in dbv_patfinder],
                                     value=[],
                                     label_checked_style={
                                         "color": "red"},
@@ -300,9 +309,9 @@ layout = dbc.Col([
 
                 dbc.ModalFooter([
                     dbc.Button(
-                        "Adicionar Receita", id="save_expense", color="success"),
+                        "Adicionar Despesa", id="save_expense", color="success"),
                     dbc.Popover(dbc.PopoverBody(
-                        "Receita Salva"), target="save_expense", placement="left", trigger="click"),
+                        "Despesa Salva"), target="save_expense", placement="left", trigger="click"),
                 ])
             ], style={"margin-top": "25px"}),
         ])
@@ -344,3 +353,83 @@ def toggle_modal(n1, is_open):
 def toggle_modal(n1, is_open):
     if n1:
         return not is_open
+
+
+# Pop-up perfis
+@app.callback(
+    Output("modal-profile", "is_open"),
+    Input("botao_avatar", "n_clicks"),
+    State("modal-profile", "is_open")
+)
+def toggle_modal(n1, is_open):
+    if n1:
+        return not is_open
+
+# Enviar Form receita
+
+
+@app.callback(
+    Output('store-receipt', 'data'),
+    Input("save_receipt", "n_clicks"),
+    [
+        State("txt-receipt", "value"),
+        State("valor_receipt", "value"),
+        State("date-receipt", "date"),
+        State("switches-input-receipt", "value"),
+        State("select_receipt", "value"),
+        State("select_patfinder", "value"),
+        State('store-receipt', 'data')
+    ]
+)
+def save_form_receipt(n, descricao, valor, date, switches, categoria, desbravador, dict_receipt):
+    df_receipt = pd.DataFrame(dict_receipt)
+
+    if n and not (valor == "" or valor == None):
+        valor = round(float(valor), 2)
+        date = pd.to_datetime(date).date()
+        categoria = categoria[0] if type(categoria) == list else categoria
+
+        recebido = 1 if 1 in switches else 0
+        fixo = 0 if 2 in switches else 0
+
+        df_receipt.loc[df_receipt.shape[0]] = [
+            valor, recebido, fixo, date, categoria, desbravador, descricao]
+        df_receipt.to_csv("df_receipt.csv")
+
+    data_return = df_receipt.to_dict()
+    return data_return
+
+
+# Enviar Form despesa
+@app.callback(
+    Output('store-expense', 'data'),
+    Input("save_expense", "n_clicks"),
+    [
+        State("value_expense", "value"),
+        State("switches-input-expense", "value"),
+        State("select_expense", "value"),
+        State("select_patfinder_expense", "value"),
+        State("date-expense", "date"),
+        State("txt-expense", "value"),
+        State('store-expense', 'data')
+    ])
+def save_form_expense(n, valor, switches, descricao, date, txt, desbravador, dict_expense):
+    df_expense = pd.DataFrame(dict_expense)
+
+    if n and not (valor == "" or valor == None):
+        valor = round(valor, 2)
+        date = pd.to_datetime(date).date()
+        categoria = categoria[0] if type(categoria) == list else categoria
+
+        recebido = 1 if 1 in switches else 0
+        fixo = 0 if 2 in switches else 0
+
+        if descricao == None or descricao == "":
+            descricao = 0
+
+        df_expense.loc[df_expense.shape[0]] = [
+            valor, recebido, fixo, date, descricao, desbravador, txt]
+        df_expense.to_csv("df_expense.csv")
+
+    data_return = df_expense.to_dict()
+    return data_return
