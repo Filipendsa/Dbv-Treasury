@@ -119,8 +119,48 @@ layout = dbc.Card([
         dbc.Col([
             dbc.Button(color="danger", id="open-new-expense",
                        children=["- Despesa"]),
-        ], width=6)
+        ], width=6),
     ], style={"margin-left": "16%"}),
+    dbc.Row([
+        dbc.Col([
+            dbc.Accordion([
+                dbc.AccordionItem(children=[
+                    dbc.Row([
+                        dbc.Col([
+                            html.Legend("Adicionar Desbravador", style={
+                                'color': 'green'}),
+                            dbc.Input(
+                                type="text", placeholder="Nome Desbravador...", id="input-add-patfinder-expense", value=""),
+                            html.Br(),
+                            dbc.Button(
+                                "Adicionar", className="btn btn-success", id="add-patfinder-expense", style={"margin-top": "20px"}),
+                            html.Br(),
+                            html.Div(
+                                id="patfinder-div-add-expense", style={}),
+                        ], width=6),
+
+                        dbc.Col([
+                            html.Legend("Excluir desbravadores", style={
+                                'color': 'red'}),
+                            dbc.Checklist(
+                                id="checklist-selected-style-patfinder-expense",
+                                options=[{"label": i, "value": i}
+                                         for i in dbv_patfinder],
+                                value=[],
+                                label_checked_style={
+                                    "color": "red"},
+                                input_checked_style={"backgroundColor": "#fa7268",
+                                                     "borderColor": "#ea6258"},
+                            ),
+                            dbc.Button(
+                                "Remover", color="warning", id="remove-patfinder-expense", style={"margin-top": "20px"}),
+                        ], width=6)
+                    ]),
+                ], title="Adicionar/Remover Desbravadores",
+                ),
+            ], flush=True, start_collapsed=True, id='accordion-patfinder-expense'),
+        ]),
+    ], style={"margin-top": "5%"}),
 
 
     # Modal receipt
@@ -212,43 +252,6 @@ layout = dbc.Card([
                     ], flush=True, start_collapsed=True, id='accordion-receipt'),
                 ], style={"margin-top": "25px"}),
                 dbc.Row([
-                    dbc.Accordion([
-                        dbc.AccordionItem(children=[
-                            dbc.Row([
-                                dbc.Col([
-                                    html.Legend("Adicionar Desbravador", style={
-                                        'color': 'green'}),
-                                    dbc.Input(
-                                        type="text", placeholder="Nome Desbravador...", id="input-add-patfinder-receipt", value=""),
-                                    html.Br(),
-                                    dbc.Button(
-                                        "Adicionar", className="btn btn-success", id="add-patfinder-receipt", style={"margin-top": "20px"}),
-                                    html.Br(),
-                                    html.Div(
-                                        id="patfinder-div-add-receipt", style={}),
-                                ], width=6),
-
-                                dbc.Col([
-                                    html.Legend("Excluir desbravadores", style={
-                                        'color': 'red'}),
-                                    dbc.Checklist(
-                                        id="checklist-selected-style-patfinder-receipt",
-                                        options=[{"label": i, "value": i}
-                                                 for i in dbv_patfinder],
-                                        value=[],
-                                        label_checked_style={
-                                            "color": "red"},
-                                        input_checked_style={"backgroundColor": "#fa7268",
-                                                             "borderColor": "#ea6258"},
-                                    ),
-                                    dbc.Button(
-                                        "Remover", color="warning", id="remove-patfinder-receipt", style={"margin-top": "20px"}),
-                                ], width=6)
-                            ]),
-                        ], title="Adicionar/Remover Desbravadores",
-                        ),
-                    ], flush=True, start_collapsed=True, id='accordion-patfinder-receipt'),
-
                     dbc.ModalFooter([
                         dbc.Button(
                             "Adicionar receipt", id="save_receipt", color="success"),
@@ -357,43 +360,6 @@ layout = dbc.Card([
                     ], flush=True, start_collapsed=True, id='accordion-expense'),
                 ], style={"margin-top": "25px"}),
                 dbc.Row([
-                    dbc.Accordion([
-                        dbc.AccordionItem(children=[
-                            dbc.Row([
-                                dbc.Col([
-                                    html.Legend("Adicionar Desbravador", style={
-                                        'color': 'green'}),
-                                    dbc.Input(
-                                        type="text", placeholder="Nome Desbravador...", id="input-add-patfinder-expense", value=""),
-                                    html.Br(),
-                                    dbc.Button(
-                                        "Adicionar", className="btn btn-success", id="add-patfinder-expense", style={"margin-top": "20px"}),
-                                    html.Br(),
-                                    html.Div(
-                                        id="patfinder-div-add-expense", style={}),
-                                ], width=6),
-
-                                dbc.Col([
-                                    html.Legend("Excluir desbravadores", style={
-                                        'color': 'red'}),
-                                    dbc.Checklist(
-                                        id="checklist-selected-style-patfinder-expense",
-                                        options=[{"label": i, "value": i}
-                                                 for i in dbv_patfinder],
-                                        value=[],
-                                        label_checked_style={
-                                            "color": "red"},
-                                        input_checked_style={"backgroundColor": "#fa7268",
-                                                             "borderColor": "#ea6258"},
-                                    ),
-                                    dbc.Button(
-                                        "Remover", color="warning", id="remove-patfinder-expense", style={"margin-top": "20px"}),
-                                ], width=6)
-                            ]),
-                        ], title="Adicionar/Remover Desbravadores",
-                        ),
-                    ], flush=True, start_collapsed=True, id='accordion-patfinder-expense'),
-
                     dbc.ModalFooter([
                         dbc.Button(
                             "Adicionar despesa", id="save_expense", color="success"),
@@ -630,21 +596,21 @@ def add_category(n, n2, txt, check_delete, data):
 
     return [txt1, style1, opt_receipt, opt_receipt, [], data_return]
 
-# Add/Remove patfinder
+# Add/Remove patfinder receipt
 
 
 @app.callback(
     [Output("patfinder-div-add-receipt", "children"),
-     Output("patfinder-div-add", "style"),
+     Output("patfinder-div-add-receipt", "style"),
      Output("select_patfinder_receipt", "options"),
-     Output('checklist-selected-style-patfinder', 'options'),
-     Output('checklist-selected-style-patfinder', 'value'),
-     Output('stored-dbv-patfinder', 'data')],
-    [Input("add-patfinder", "n_clicks"),
-     Input("remove-patfinder", 'n_clicks')],
-    [State("input-add-patfinder", "value"),
-     State('checklist-selected-style-patfinder', 'value'),
-     State('stored-dbv-patfinder', 'data')]
+     Output('checklist-selected-style-patfinder-receipt', 'options'),
+     Output('checklist-selected-style-patfinder-receipt', 'value'),
+     Output('stored-dbv-ptfinder', 'data')],
+    [Input("add-patfinder-receipt", "n_clicks"),
+     Input("remove-patfinder-receipt", 'n_clicks')],
+    [State("input-add-patfinder-receipt", "value"),
+     State('checklist-selected-style-patfinder-receipt', 'value'),
+     State('stored-dbv-ptfinder', 'data')]
 )
 def add_patfinder(n, n2, txt, check_delete, data):
     dbv_patfinder = list(data["Desbravador"].values())

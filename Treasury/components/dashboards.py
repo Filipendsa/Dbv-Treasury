@@ -266,7 +266,7 @@ def pie_receipt(data_receipt, receipt, theme):
     df = df[df['Categoria'].isin(receipt)]
 
     fig = px.pie(df, values=df.Valor, names=df.Categoria, hole=.2)
-    fig.update_layout(title={'text': "receipts"})
+    fig.update_layout(title={'text': "Receitas"})
     fig.update_layout(margin=graph_margin, template=template_from_url(theme))
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                       plot_bgcolor='rgba(0,0,0,0)')
@@ -287,7 +287,7 @@ def pie_expense(data_expense, expense, theme):
     df = df[df['Categoria'].isin(expense)]
 
     fig = px.pie(df, values=df.Valor, names=df.Categoria, hole=.2)
-    fig.update_layout(title={'text': "expenses"})
+    fig.update_layout(title={'text': "Despesas"})
 
     fig.update_layout(margin=graph_margin, template=template_from_url(theme))
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
