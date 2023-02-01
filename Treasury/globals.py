@@ -1,16 +1,16 @@
 import pandas as pd
 import os
 
-if ("df_expense.csv" in os.listdir()) and ("df_receipt.csv" in os.listdir()):
+if ("df_expenses.csv" in os.listdir()) and ("df_receipts.csv" in os.listdir()):
 
-    df_expense = pd.read_csv("df_expense.csv", index_col=0, parse_dates=True)
-    df_receipt = pd.read_csv("df_receipt.csv", index_col=0, parse_dates=True)
+    df_expenses = pd.read_csv("df_expenses.csv", index_col=0, parse_dates=True)
+    df_receipts = pd.read_csv("df_receipts.csv", index_col=0, parse_dates=True)
 
-    df_expense["Data"] = pd.to_datetime(df_expense["Data"])
-    df_receipt["Data"] = pd.to_datetime(df_receipt["Data"])
+    df_expenses["Data"] = pd.to_datetime(df_expenses["Data"])
+    df_receipts["Data"] = pd.to_datetime(df_receipts["Data"])
 
-    df_expense["Data"] = df_expense["Data"].apply(lambda x: x.date())
-    df_receipt["Data"] = df_receipt["Data"].apply(lambda x: x.date())
+    df_expenses["Data"] = df_expenses["Data"].apply(lambda x: x.date())
+    df_receipts["Data"] = df_receipts["Data"].apply(lambda x: x.date())
 
 else:
     data_structure = {'Valor': [],
@@ -21,18 +21,17 @@ else:
                       'Desbravador': [],
                       'Descrição': [], }
 
-    df_receipt = pd.DataFrame(data_structure)
-    df_expense = pd.DataFrame(data_structure)
+    df_receipts = pd.DataFrame(data_structure)
+    df_expenses = pd.DataFrame(data_structure)
 
-    df_expense.to_csv("df_expense.csv")
-    df_receipt.to_csv("df_receipt.csv")
+    df_expenses.to_csv("df_expenses.csv")
+    df_receipts.to_csv("df_receipts.csv")
 
 
 if ("df_cat_receipt.csv" in os.listdir()) and ("df_cat_expense.csv" in os.listdir()) and ("df_dbv_patfinder.csv" in os.listdir()):
     df_cat_receipt = pd.read_csv("df_cat_receipt.csv", index_col=0)
     df_cat_expense = pd.read_csv("df_cat_expense.csv", index_col=0)
     df_dbv_patfinder = pd.read_csv("df_dbv_patfinder.csv", index_col=0)
-
     cat_receipt = df_cat_receipt.values.tolist()
     cat_expense = df_cat_expense.values.tolist()
     dbv_patfinder = df_dbv_patfinder.values.tolist()

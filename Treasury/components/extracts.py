@@ -14,8 +14,8 @@ from dash_bootstrap_templates import template_from_url, ThemeChangerAIO
 # =========  Layout  =========== #
 layout = dbc.Col([
     dbc.Row([
-        html.Legend("Tabela de despesas"),
-        html.Div(id="table-expense", className="dbc"),
+        html.Legend("Tabela de Despesas"),
+        html.Div(id="table-expenses", className="dbc"),
     ]),
 
     dbc.Row([
@@ -26,7 +26,7 @@ layout = dbc.Col([
         dbc.Col([
             dbc.Card(
                 dbc.CardBody([
-                    html.H4("Despesa"),
+                    html.H4("Despesas"),
                     html.Legend("R$ -", id="value_expense_card",
                                 style={'font-size': '60px'}),
                     html.H6("Total de despesas"),
@@ -40,8 +40,8 @@ layout = dbc.Col([
 
 
 @app.callback(
-    Output('table-expense', 'children'),
-    Input('store-expense', 'data')
+    Output('table-expenses', 'children'),
+    Input('store-expenses', 'data')
 )
 def imprimir_table(data):
     df = pd.DataFrame(data)
@@ -85,14 +85,14 @@ def imprimir_table(data):
 
 @app.callback(
     Output('bar-graph', 'figure'),
-    [Input('store-expense', 'data'),
+    [Input('store-expenses', 'data'),
      Input(ThemeChangerAIO.ids.radio("theme"), "value")]
 )
 def bar_chart(data, theme):
     df = pd.DataFrame(data)
     df_grouped = df.groupby("Categoria").sum()[["Valor"]].reset_index()
     graph = px.bar(df_grouped, x='Categoria',
-                   y='Valor', title="expense Gerais")
+                   y='Valor', title="Despesas Gerais")
     graph.update_layout(template=template_from_url(theme))
     graph.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                         plot_bgcolor='rgba(0,0,0,0)')
@@ -103,7 +103,7 @@ def bar_chart(data, theme):
 
 @app.callback(
     Output('value_expense_card', 'children'),
-    Input('store-expense', 'data')
+    Input('store-expenses', 'data')
 )
 def display_desp(data):
     df = pd.DataFrame(data)

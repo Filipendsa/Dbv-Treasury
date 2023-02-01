@@ -6,24 +6,21 @@ import pandas as pd
 import plotly.express as px
 
 from app import *
-
-from components import extracs, sidebar, dashboards
+from components import sidebar, dashboards, extracts
 
 # DataFrames and Dcc.Store
 
-df_receipt = pd.read_csv("df_receipt.csv", index_col=0, parse_dates=True)
-df_receipt_aux = df_receipt.to_dict()
+df_receipts = pd.read_csv("df_receipts.csv", index_col=0, parse_dates=True)
+df_receipts_aux = df_receipts.to_dict()
 
-df_expense = pd.read_csv("df_expense.csv", index_col=0, parse_dates=True)
-df_expense_aux = df_expense.to_dict()
+df_expenses = pd.read_csv("df_expenses.csv", index_col=0, parse_dates=True)
+df_expenses_aux = df_expenses.to_dict()
 
+list_receipts = pd.read_csv('df_cat_receipt.csv', index_col=0)
+list_receipts_aux = list_receipts.to_dict()
 
-list_receipt = pd.read_csv('df_cat_receipt.csv', index_col=0)
-list_receipt_aux = list_receipt.to_dict()
-
-list_expense = pd.read_csv('df_cat_expense.csv', index_col=0)
-list_expense_aux = list_expense.to_dict()
-
+list_expenses = pd.read_csv('df_cat_expense.csv', index_col=0)
+list_expenses_aux = list_expenses.to_dict()
 list_patfinder = pd.read_csv('df_dbv_patfinder.csv', index_col=0)
 list_patfinder_aux = list_patfinder.to_dict()
 
@@ -31,23 +28,24 @@ list_patfinder_aux = list_patfinder.to_dict()
 content = html.Div(id="page-content")
 
 app.layout = dbc.Container(children=[
-    dcc.Store(id='store-receipt', data=df_receipt_aux),
-    dcc.Store(id="store-expense", data=df_expense_aux),
-    dcc.Store(id='stored-cat-receipt', data=list_receipt_aux),
-    dcc.Store(id='stored-cat-expense', data=list_expense_aux),
+    dcc.Store(id='store-receipts', data=df_receipts_aux),
+    dcc.Store(id="store-expenses", data=df_expenses_aux),
+    dcc.Store(id='stored-cat-receipts', data=list_receipts_aux),
+    dcc.Store(id='stored-cat-expenses', data=list_expenses_aux),
     dcc.Store(id='stored-dbv-ptfinder', data=list_patfinder_aux),
 
     dbc.Row([
         dbc.Col([
-            dcc.Location(id='url'),
+            dcc.Location(id="url"),
             sidebar.layout
         ], md=2),
+
         dbc.Col([
-            content
-        ], md=10)
+            html.Div(id="page-content")
+        ], md=10),
     ])
 
-], fluid=True,)
+], fluid=True, style={"padding": "0px"}, className="dbc")
 
 
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
@@ -56,7 +54,7 @@ def render_page_content(pathname):
         return dashboards.layout
 
     if pathname == "/extratos":
-        return extracs.layout
+        return extracts.layout
 
 
 if __name__ == '__main__':
