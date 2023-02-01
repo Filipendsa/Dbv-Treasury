@@ -26,7 +26,7 @@ layout = dbc.Col([
         dbc.Col([
             dbc.Card(
                 dbc.CardBody([
-                    html.H4("Despesas"),
+                    html.H4("Despesa"),
                     html.Legend("R$ -", id="value_expense_card",
                                 style={'font-size': '60px'}),
                     html.H6("Total de despesas"),
@@ -36,14 +36,14 @@ layout = dbc.Col([
 ], style={"padding": "10px"})
 
 # =========  Callbacks  =========== #
-# Tabela
+# table
 
 
 @app.callback(
     Output('table-expense', 'children'),
     Input('store-expense', 'data')
 )
-def imprimir_tabela(data):
+def imprimir_table(data):
     df = pd.DataFrame(data)
     df['Data'] = pd.to_datetime(df['Data']).dt.date
 
@@ -57,7 +57,7 @@ def imprimir_tabela(data):
 
     df.sort_values(by='Data', ascending=False)
 
-    tabela = dash_table.DataTable(
+    table = dash_table.DataTable(
         id='datatable-interactivity',
         columns=[
             {"name": i, "id": i, "deletable": False,
@@ -78,7 +78,7 @@ def imprimir_tabela(data):
         page_size=10,
     ),
 
-    return tabela
+    return table
 
 # Bar Graph
 
@@ -92,7 +92,7 @@ def bar_chart(data, theme):
     df = pd.DataFrame(data)
     df_grouped = df.groupby("Categoria").sum()[["Valor"]].reset_index()
     graph = px.bar(df_grouped, x='Categoria',
-                   y='Valor', title="Despesas Gerais")
+                   y='Valor', title="expense Gerais")
     graph.update_layout(template=template_from_url(theme))
     graph.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                         plot_bgcolor='rgba(0,0,0,0)')
