@@ -123,27 +123,34 @@ layout = dbc.Card([
     ], style={"margin-left": "16%"}),
     dbc.Row([
         dbc.Col([
-            dbc.Accordion([
-                dbc.AccordionItem(children=[
-                    dbc.Row([
+            dbc.Button(color="info", id="open-patfinder",
+                       children=["+|- Desbravador"]),
+        ], width=12),
+    ], style={"margin-left": "16%", "margin-top": "10px"}),
+    # Modal patfinder
+    html.Div([
+        dbc.Modal([
+            dbc.ModalHeader(dbc.ModalTitle("Adicionar / remover Desbravador")),
+            dbc.ModalBody([
+                dbc.Row([
                         dbc.Col([
                             html.Legend("Adicionar Desbravador", style={
                                 'color': 'green'}),
                             dbc.Input(
-                                type="text", placeholder="Nome Desbravador...", id="input-add-patfinder-expense", value=""),
+                                type="text", placeholder="Nome Desbravador...", id="input-add-patfinder", value=""),
                             html.Br(),
                             dbc.Button(
-                                "Adicionar", className="btn btn-success", id="add-patfinder-expense", style={"margin-top": "20px"}),
+                                "Adicionar", className="btn btn-success", id="add-patfinder", style={"margin-top": "20px"}),
                             html.Br(),
                             html.Div(
-                                id="patfinder-div-add-expense", style={}),
+                                id="patfinder-div-add", style={}),
                         ], width=6),
 
                         dbc.Col([
                             html.Legend("Excluir desbravadores", style={
                                 'color': 'red'}),
                             dbc.Checklist(
-                                id="checklist-selected-style-patfinder-expense",
+                                id="checklist-selected-style-patfinder",
                                 options=[{"label": i, "value": i}
                                          for i in dbv_patfinder],
                                 value=[],
@@ -153,15 +160,16 @@ layout = dbc.Card([
                                                      "borderColor": "#ea6258"},
                             ),
                             dbc.Button(
-                                "Remover", color="warning", id="remove-patfinder-expense", style={"margin-top": "20px"}),
+                                "Remover", color="warning", id="remove-patfinder", style={"margin-top": "20px"}),
                         ], width=6)
-                    ]),
-                ], title="Adicionar/Remover Desbravadores",
-                ),
-            ], flush=True, start_collapsed=True, id='accordion-patfinder-expense'),
-        ]),
-    ], style={"margin-top": "5%"}),
-
+                        ]),
+            ])], style={"background-color": "rgba(17, 140, 79, 0.05)"},
+            id="modal-patfinder",
+            size="lg",
+            is_open=False,
+            centered=True,
+            backdrop=True)
+    ]),
 
     # Modal receipt
     html.Div([
@@ -209,7 +217,7 @@ layout = dbc.Card([
                     ], width=6),
                     dbc.Col([
                         html.Label("Desbravador"),
-                        dbc.Select(id="select_patfinder_receipt", options=[
+                        dbc.Select(id="select_patfinder", options=[
                             {"label": i, "value": i} for i in dbv_patfinder], value=dbv_patfinder[0])
                     ], width=6)
                 ], style={"margin-top": "25px"}),
@@ -414,6 +422,18 @@ def toggle_modal(n1, is_open):
     if n1:
         return not is_open
 
+# Pop-up patfinder
+
+
+@app.callback(
+    Output("modal-patfinder", "is_open"),
+    Input("open-patfinder", "n_clicks"),
+    State("modal-patfinder", "is_open")
+)
+def toggle_modal(n1, is_open):
+    if n1:
+        return not is_open
+
 
 # Pop-up perfis
 @app.callback(
@@ -438,7 +458,7 @@ def toggle_modal(n1, is_open):
         State("date-receipts", "date"),
         State("switches-input-receipt", "value"),
         State("select_receipt", "value"),
-        State("select_patfinder_receipt", "value"),
+        State("select_patfinder", "value"),
         State('store-receipts', 'data')
     ]
 )
@@ -596,20 +616,20 @@ def add_category(n, n2, txt, check_delete, data):
 
     return [txt1, style1, opt_receipt, opt_receipt, [], data_return]
 
-# Add/Remove patfinder receipt
+# Add/Remove patfinder
 
 
 @app.callback(
-    [Output("patfinder-div-add-receipt", "children"),
-     Output("patfinder-div-add-receipt", "style"),
-     Output("select_patfinder_receipt", "options"),
-     Output('checklist-selected-style-patfinder-receipt', 'options'),
-     Output('checklist-selected-style-patfinder-receipt', 'value'),
+    [Output("patfinder-div-add", "children"),
+     Output("patfinder-div-add", "style"),
+     Output("select_patfinder", "options"),
+     Output('checklist-selected-style-patfinder', 'options'),
+     Output('checklist-selected-style-patfinder', 'value'),
      Output('stored-dbv-ptfinder', 'data')],
-    [Input("add-patfinder-receipt", "n_clicks"),
-     Input("remove-patfinder-receipt", 'n_clicks')],
-    [State("input-add-patfinder-receipt", "value"),
-     State('checklist-selected-style-patfinder-receipt', 'value'),
+    [Input("add-patfinder", "n_clicks"),
+     Input("remove-patfinder", 'n_clicks')],
+    [State("input-add-patfinder", "value"),
+     State('checklist-selected-style-patfinder', 'value'),
      State('stored-dbv-ptfinder', 'data')]
 )
 def add_patfinder(n, n2, txt, check_delete, data):
