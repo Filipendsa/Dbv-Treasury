@@ -310,7 +310,7 @@ layout = dbc.Card([
                     dbc.Col([
                         dbc.Label("Extras"),
                         dbc.Checklist(
-                            options=[{"label": "Foi recebida", "value": 1},
+                            options=[{"label": "Foi paga", "value": 1},
                                      {"label": "Despesa Recorrente", "value": 2}],
                             value=[1],
                             id="switches-input-expense",
@@ -517,7 +517,7 @@ def salve_form_expense(n, descricao, valor, date, switches, categoria, desbravad
             descricao = 0
 
         df_expenses.loc[df_expenses.shape[0]] = [
-            valor, recebido, fixo, date, descricao, desbravador, descricao]
+            valor, recebido, fixo, date, categoria, desbravador, descricao]
         df_expenses.to_csv("df_expenses.csv")
 
     data_return = df_expenses.to_dict()
